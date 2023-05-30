@@ -53,7 +53,7 @@ jobs:
           tags: |
             ghcr.io/${{ github.repository }}:${{ github.ref_name }}
             ghcr.io/${{ github.repository }}:latest
-            docker.io/${{ secrets.DOCKERHUB_REP }}:${{ github.ref_name }}
-            docker.io/${{ secrets.DOCKERHUB_REP }}:latest
+            docker.io/${{ github.repository }}:${{ github.ref_name }}
+            docker.io/${{ github.repository }}:latest
           cache-from: type=registry,ref=${{ github.repository }}:cache
           cache-to: type=registry,ref=${{ github.repository }}:cache,mode=max   
