@@ -1,10 +1,10 @@
-name: go-proxy-bingai
+name: go-proxy-bingai-release
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "release" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "release" ]
 
 jobs:
 
@@ -52,8 +52,6 @@ jobs:
           push: true
           tags: |
             ghcr.io/${{ github.repository }}:${{ github.ref_name }}
-            ghcr.io/${{ github.repository }}:latest
             docker.io/${{ github.repository }}:${{ github.ref_name }}
-            docker.io/${{ github.repository }}:latest
           cache-from: type=registry,ref=${{ github.repository }}:cache
           cache-to: type=registry,ref=${{ github.repository }}:cache,mode=max   
