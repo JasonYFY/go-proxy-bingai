@@ -32,10 +32,6 @@ export const useChatStore = defineStore(
         label: 'Cloudflare',
       },
       {
-        baseUrl: 'https://bingai.mikolo.top',
-        label: 'Cloudflare-other',
-      },
-      {
         baseUrl: location.origin,
         label: '本站',
       },
