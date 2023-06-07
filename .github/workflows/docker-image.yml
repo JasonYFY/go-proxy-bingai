@@ -51,9 +51,7 @@ jobs:
           file: ./docker/Dockerfile  
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}:${{ github.ref_name }}
             ghcr.io/${{ github.repository }}:latest
-            docker.io/${{ github.repository }}:${{ github.ref_name }}
             docker.io/${{ github.repository }}:latest
           cache-from: type=registry,ref=${{ github.repository }}:cache
           cache-to: type=registry,ref=${{ github.repository }}:cache,mode=max   
