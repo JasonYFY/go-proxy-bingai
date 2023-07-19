@@ -13,7 +13,7 @@ _w.rms.js(
     { 'A:rms:answers:Shared:BingCore.Bundle': '/rp/b4RftLcpNuuBy86wP4OweSL7-T0.br.js' },
     { 'A:rms:answers:Web:SydneyFSCHelper': '/rp/4HTa8qkEYVg_8T6ueICX_pKDe50.br.js' },
     { 'A:rms:answers:VisualSystem:ConversationScope': '/rp/YFRe970EMtFzujI9pBYZBGpdHEo.br.js' },
-    { 'A:rms:answers:CodexBundle:cib-bundle': '/rp/z9_SsI02ef2T3LbfYch7omlQckY.br.js' },
-    { 'A:rms:answers:SharedStaticAssets:speech-sdk': '/rp/6slp3E-BqFf904Cz6cCWPY1bh9E.br.js' },
+    { 'A:rms:answers:CodexBundle:cib-bundle': 'https://cdn.jsdelivr.net/gh/JasonYFY/CDN/js/z9_SsI02ef2T3LbfYch7omlQckY.br.js' },
+    { 'A:rms:answers:SharedStaticAssets:speech-sdk': 'https://cdn.jsdelivr.net/gh/JasonYFY/CDN/js/6slp3E-BqFf904Cz6cCWPY1bh9E.br.js' },
     { 'A:rms:answers:Web:SydneyFullScreenConv': '/rp/p3B0R3uyb4l5fPv4-1oZWzJzYJc.br.js' }
 );
