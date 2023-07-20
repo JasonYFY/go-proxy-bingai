@@ -97,7 +97,7 @@ _w['_sydConvConfig'] = {
   traceId: '64b2de1567464b82ac4926be6f9befda',
   extraSappOptions: '',
   extraEdgeOptions: 'eredirecturl',
-  enableSydMic: false,
+  enableSydMic: true,
   carouselQueries: '',
   sydCarPropQuery: false,
   enableSydShare: false,
