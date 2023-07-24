@@ -13,7 +13,7 @@ _w.rms.js(
     { 'A:rms:answers:Shared:BingCore.Bundle': '/rp/Pki1-YEXD6vos5MiDyyAeDq7sgs.br.js' },
     { 'A:rms:answers:Web:SydneyFSCHelper': '/rp/IKBASmxOJ_ubDLFkwxNAcql6AGY.br.js' },
     { 'A:rms:answers:VisualSystem:ConversationScope': '/rp/YFRe970EMtFzujI9pBYZBGpdHEo.br.js' },
-    { 'A:rms:answers:CodexBundle:cib-bundle': '/rp/wy2Kbr72SvrxylJaHweOTCpPs14.br.js' },
-    { 'A:rms:answers:SharedStaticAssets:speech-sdk': '/rp/6slp3E-BqFf904Cz6cCWPY1bh9E.br.js' },
-    { 'A:rms:answers:Web:SydneyFullScreenConv': '/rp/qj7paUiWxhCdv2VxdV3OWsUIoZ8.br.js' }
+    { 'A:rms:answers:CodexBundle:cib-bundle': 'https://cdn.jsdelivr.net/gh/JasonYFY/CDN/rp/wy2Kbr72SvrxylJaHweOTCpPs14.br.js' },
+    { 'A:rms:answers:SharedStaticAssets:speech-sdk': 'https://cdn.jsdelivr.net/gh/JasonYFY/CDN/rp/6slp3E-BqFf904Cz6cCWPY1bh9E.br.js' },
+    { 'A:rms:answers:Web:SydneyFullScreenConv': 'https://cdn.jsdelivr.net/gh/JasonYFY/CDN/rp/qj7paUiWxhCdv2VxdV3OWsUIoZ8.br.js' }
 );
