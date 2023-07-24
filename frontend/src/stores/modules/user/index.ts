@@ -77,7 +77,7 @@ export const useUserStore = defineStore(
     };
 
     const setAuthKey = (authKey: string) => {
-      cookies.set(authKeyCookieName, authKey);
+      cookies.set(authKeyCookieName, authKey,15*24*60);
     };
 
     const clearCache = async () => {
