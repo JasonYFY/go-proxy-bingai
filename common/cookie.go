@@ -21,9 +21,7 @@ type User struct {
 var (
 	users                     []*User
 	USER_INFO_ENV_NAME_PREFIX = "Go_Proxy_BingAI_USER_INFO"
-	USER_INFO_URL             = "http://127.0.0.1:8082/getCookieU"
-
-	CRON_STR = "0 0 * * *"
+	CRON_STR                  = "0 0 * * *"
 )
 
 func init() {
@@ -97,7 +95,7 @@ func updateUserToken(user *User) {
 		return
 	}
 
-	resp, err := http.Post(USER_INFO_URL, "application/json", bytes.NewBuffer(jsonData))
+	resp, err := http.Post(BingAI_TOKEN_URL, "application/json", bytes.NewBuffer(jsonData))
 	if err != nil {
 		log.Println("请求失败:", err)
 		return
