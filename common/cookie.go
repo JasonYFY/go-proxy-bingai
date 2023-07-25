@@ -26,7 +26,6 @@ var (
 
 func init() {
 	initUserInfo()
-	initCookie()
 	cronAndUpdateToken()
 }
 

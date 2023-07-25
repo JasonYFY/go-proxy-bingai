@@ -41,6 +41,7 @@ func initEnv() {
 		BingAI_TOKEN_URL = "http://127.0.0.1:8082/getCookieU"
 	}
 	log.Println("初始化的tokenUrl为：", BingAI_TOKEN_URL)
+	initCookie()
 }
 
 func initUserToken() {
