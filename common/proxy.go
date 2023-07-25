@@ -95,6 +95,9 @@ func NewSingleHostReverseProxy(target *url.URL) *httputil.ReverseProxy {
 		ckUserToken, _ := req.Cookie(USER_TOKEN_COOKIE_NAME)
 		if ckUserToken == nil || ckUserToken.Value == "" {
 			randCKIndex, randCkVal := getRandCookie(req)
+			if IS_SHOW_USE_U {
+				log.Println("使用的cookie的index ： ", randCKIndex)
+			}
 			if randCkVal != "" {
 				resCKRandIndex = strconv.Itoa(randCKIndex)
 				req.AddCookie(&http.Cookie{

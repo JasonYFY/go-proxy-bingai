@@ -30,6 +30,8 @@ func init() {
 }
 
 func cronAndUpdateToken() {
+	CRON_STR = os.Getenv("Go_Proxy_BingAI_CRON_STR") != ""
+
 	c := cron.New()
 	// 每天凌晨0点执行定时任务
 	err := c.AddFunc(CRON_STR, func() {

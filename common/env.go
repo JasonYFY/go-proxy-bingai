@@ -9,6 +9,7 @@ import (
 var (
 	// is debug
 	IS_DEBUG_MODE bool
+	IS_SHOW_USE_U bool
 	// socks
 	SOCKS_URL  string
 	SOCKS_USER string
@@ -30,6 +31,7 @@ func init() {
 func initEnv() {
 	// is debug
 	IS_DEBUG_MODE = os.Getenv("Go_Proxy_BingAI_Debug") != ""
+	IS_SHOW_USE_U = os.Getenv("Go_Proxy_BingAI_SHOW_U") != ""
 	// socks
 	SOCKS_URL = os.Getenv("Go_Proxy_BingAI_SOCKS_URL")
 	SOCKS_USER = os.Getenv("Go_Proxy_BingAI_SOCKS_USER")
