@@ -13,6 +13,7 @@ import { useUserStore } from '@/stores/modules/user';
 
 const isShowMore = ref(false);
 const isShowSetTokenModal = ref(false);
+const isShowDonateModal = ref(false);
 const userToken = ref('');
 const message = useMessage();
 const promptStore = usePromptStore();
@@ -31,6 +32,7 @@ const navType = {
   setToken: 'setToken',
   compose: 'compose',
   createImage: 'createImage',
+  donate: 'donate',
   reset: 'reset',
 };
 const navConfigs = [
@@ -55,6 +57,10 @@ const navConfigs = [
     key: navType.createImage,
     label: '图像创建',
   },
+  {
+      key: navType.donate,
+      label: '慷慨解囊',
+    },
   {
     key: navType.reset,
     label: '一键重置',
@@ -95,6 +101,11 @@ const handleSelect = (key: string) => {
           message.warning('体验画图功能需先登录');
         }
         isShowCreateImageModal.value = true;
+      }
+      break;
+    case navType.donate:
+      {
+        isShowDonateModal.value = true;
       }
       break;
     case navType.reset:
@@ -150,4 +161,12 @@ const saveUserToken = () => {
     </template>
   </NModal>
   <CreateImage v-model:show="isShowCreateImageModal" />
+
+  <NModal v-model:show="isShowDonateModal" preset="dialog" :show-icon="false">
+      <template #header>
+        <div class="text-3xl py-2">慷慨解囊</div>
+      </template>
+      <p>如果你觉得这个网站对你有帮助，并且情况允许的话，可以给我一点点支持，总之非常感谢支持～</p>
+      <img style="height: 300px;" src="https://cdn.jsdelivr.net/gh/JasonYFY/CDN/images/wechatReceipt.jpg" />
+    </NModal>
 </template>
