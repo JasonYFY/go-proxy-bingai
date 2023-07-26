@@ -21,7 +21,7 @@ type User struct {
 var (
 	users                     []*User
 	USER_INFO_ENV_NAME_PREFIX = "Go_Proxy_BingAI_USER_INFO"
-	CRON_STR                  = "0 0 * * *"
+	CRON_STR                  = "0 0 0 * * ?"
 )
 
 func init() {
@@ -31,7 +31,7 @@ func init() {
 
 func cronAndUpdateToken() {
 	if os.Getenv("Go_Proxy_BingAI_CRON_STR") != "" {
-		CRON_STR =os.Getenv("Go_Proxy_BingAI_CRON_STR")
+		CRON_STR = os.Getenv("Go_Proxy_BingAI_CRON_STR")
 	}
 
 	c := cron.New()

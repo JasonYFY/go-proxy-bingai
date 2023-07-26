@@ -4,18 +4,15 @@ import (
 	"bytes"
 	"compress/gzip"
 	"fmt"
+	"github.com/andybalholm/brotli"
+	"golang.org/x/net/proxy"
 	"io"
 	"log"
-	"math/rand"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
 	"strconv"
 	"strings"
-	"time"
-
-	"github.com/andybalholm/brotli"
-	"golang.org/x/net/proxy"
 )
 
 var (
@@ -54,7 +51,8 @@ var (
 	PROXY_WEB_PAGE_PATH    = PROXY_WEB_PREFIX_PATH + "index.html"
 
 	//定义一个map保存ip对应的token下标
-	lruCache = NewLRUCache(500)
+	lruCache     = NewLRUCache(500)
+	currentIndex int
 )
 
 func NewSingleHostReverseProxy(target *url.URL) *httputil.ReverseProxy {
@@ -99,7 +97,7 @@ func NewSingleHostReverseProxy(target *url.URL) *httputil.ReverseProxy {
 		if ckUserToken == nil || ckUserToken.Value == "" {
 			randCKIndex, randCkVal := getRandCookie(req, randIP)
 			if IS_SHOW_USE_U {
-				log.Printf("randIP:%s,使用的cookie的index:%s ", randIP, randCKIndex)
+				log.Printf("randIP:%s,使用的cookie的index:%d ", randIP, randCKIndex)
 			}
 			if randCkVal != "" {
 				resCKRandIndex = strconv.Itoa(randCKIndex)
@@ -272,12 +270,20 @@ func getRandCookie(req *http.Request, randIP string) (int, string) {
 		return val, USER_TOKEN_LIST[val]
 	}
 
-	seed := time.Now().UnixNano()
+	/*seed := time.Now().UnixNano()
 	rng := rand.New(rand.NewSource(seed))
-	randIndex := rng.Intn(len(USER_TOKEN_LIST))
+	randIndex := rng.Intn(len(USER_TOKEN_LIST))*/
+	//改为轮询
+	randIndex := getNextIndex()
 	lruCache.Put(randIP, randIndex)
 	return randIndex, USER_TOKEN_LIST[randIndex]
 
+}
+
+func getNextIndex() int {
+	index := currentIndex
+	currentIndex = (currentIndex + 1) % len(USER_TOKEN_LIST)
+	return index
 }
 
 func replaceResBody(originalBody string, originalScheme string, originalHost string) string {
