@@ -52,6 +52,9 @@ var (
 	RAND_IP_COOKIE_NAME    = "BingAI_Rand_IP"
 	PROXY_WEB_PREFIX_PATH  = "/web/"
 	PROXY_WEB_PAGE_PATH    = PROXY_WEB_PREFIX_PATH + "index.html"
+
+	//定义一个map保存ip对应的token下标
+	lruCache = NewLRUCache(500)
 )
 
 func NewSingleHostReverseProxy(target *url.URL) *httputil.ReverseProxy {
@@ -94,9 +97,9 @@ func NewSingleHostReverseProxy(target *url.URL) *httputil.ReverseProxy {
 		// 未登录用户
 		ckUserToken, _ := req.Cookie(USER_TOKEN_COOKIE_NAME)
 		if ckUserToken == nil || ckUserToken.Value == "" {
-			randCKIndex, randCkVal := getRandCookie(req)
+			randCKIndex, randCkVal := getRandCookie(req, randIP)
 			if IS_SHOW_USE_U {
-				log.Println("使用的cookie的index ： ", randCKIndex)
+				log.Printf("randIP:%s,使用的cookie的index:%s ", randIP, randCKIndex)
 			}
 			if randCkVal != "" {
 				resCKRandIndex = strconv.Itoa(randCKIndex)
@@ -244,7 +247,7 @@ func NewSingleHostReverseProxy(target *url.URL) *httputil.ReverseProxy {
 }
 
 // return cookie index and cookie
-func getRandCookie(req *http.Request) (int, string) {
+func getRandCookie(req *http.Request, randIP string) (int, string) {
 	utLen := len(USER_TOKEN_LIST)
 	if utLen == 0 {
 		return 0, ""
@@ -253,8 +256,8 @@ func getRandCookie(req *http.Request) (int, string) {
 		return 0, USER_TOKEN_LIST[0]
 	}
 
-	ckRandIndex, _ := req.Cookie(RAND_COOKIE_INDEX_NAME)
-	if ckRandIndex != nil && ckRandIndex.Value != "" {
+	//ckRandIndex, _ := req.Cookie(RAND_COOKIE_INDEX_NAME)
+	/*if ckRandIndex != nil && ckRandIndex.Value != "" {
 		tmpIndex, err := strconv.Atoi(ckRandIndex.Value)
 		if err != nil {
 			log.Println("ckRandIndex err ：", err)
@@ -263,11 +266,18 @@ func getRandCookie(req *http.Request) (int, string) {
 		if tmpIndex < utLen {
 			return tmpIndex, USER_TOKEN_LIST[tmpIndex]
 		}
+	}*/
+	val, ok := lruCache.Get(randIP)
+	if ok {
+		return val, USER_TOKEN_LIST[val]
 	}
+
 	seed := time.Now().UnixNano()
 	rng := rand.New(rand.NewSource(seed))
 	randIndex := rng.Intn(len(USER_TOKEN_LIST))
+	lruCache.Put(randIP, randIndex)
 	return randIndex, USER_TOKEN_LIST[randIndex]
+
 }
 
 func replaceResBody(originalBody string, originalScheme string, originalHost string) string {
@@ -350,23 +360,23 @@ func modifyBrBody(res *http.Response, originalScheme string, originalHost string
 	// 换成 gzip 压缩以兼容 WebView
 	var buf bytes.Buffer
 	writer := gzip.NewWriter(&buf)
-    defer writer.Close()
+	defer writer.Close()
 
-    _, err := writer.Write(modifiedBody)
-    if err != nil {
-        return err
-    }
-    err = writer.Flush()
-    if err != nil {
-        return err
-    }
-    err = writer.Close()
-    if err != nil {
-        return err
-    }
+	_, err := writer.Write(modifiedBody)
+	if err != nil {
+		return err
+	}
+	err = writer.Flush()
+	if err != nil {
+		return err
+	}
+	err = writer.Close()
+	if err != nil {
+		return err
+	}
 
-    // 修改 Content-Encoding 头
-    res.Header.Set("Content-Encoding", "gzip")
+	// 修改 Content-Encoding 头
+	res.Header.Set("Content-Encoding", "gzip")
 
 	// 修改 Content-Length 头
 	// res.ContentLength = int64(buf.Len())
