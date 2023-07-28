@@ -39,7 +39,7 @@ func cronAndUpdateToken() {
 	err := c.AddFunc(CRON_STR, func() {
 		log.Println("[定时任务]开始-检查是否有token过期")
 		for _, user := range users {
-			if IsDateEqualToday(user.Expiry) {
+			if IsDateLessEqAfterTomorrow(user.Expiry) {
 				var oldToken = user.Token
 				log.Printf("[定时任务] 用户：%s ，准备过期，过期时间：%s ,开始执行更新。。。", user.Username, user.Expiry)
 				updateUserToken(user)
@@ -148,7 +148,7 @@ func parseUser(userInfo string) {
 	users = append(users, &user)
 }
 
-// IsDateEqualToday 判断给定日期字符串是否等于今天的日期
+// 判断给定日期字符串是否等于今天的日期
 func IsDateEqualToday(dateString string) bool {
 	// 获取今天的日期字符串，格式为 "2006-01-02"
 	todayString := time.Now().Format("2006-01-02")
@@ -157,4 +157,25 @@ func IsDateEqualToday(dateString string) bool {
 
 	/// 比较日期是否相等
 	return datePrefix == todayString
+}
+func IsDateLessEqAfterTomorrow(dateString string) bool {
+	// 解析传入的日期字符串为时间类型
+	layout := "2006-01-02 15:04:05"
+	inputTime, err := time.Parse(layout, dateString)
+	if err != nil {
+		log.Println("日期解析错误：", err)
+		return false
+	}
+
+	// 获取当前时间
+	now := time.Now()
+
+	// 添加两天（48小时）到当前时间
+	tomorrow := now.Add(48 * time.Hour)
+
+	// 比较传入日期是否小于等于明后天
+	if inputTime.Before(tomorrow) || inputTime.Equal(tomorrow) {
+		return true
+	}
+	return false
 }

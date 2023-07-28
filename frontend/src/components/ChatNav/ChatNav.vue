@@ -37,10 +37,6 @@ const navType = {
 };
 const navConfigs = [
   {
-    key: navType.chatService,
-    label: '服务选择',
-  },
-  {
     key: navType.promptStore,
     label: '提示词库',
   },
@@ -132,6 +128,19 @@ const saveUserToken = () => {
   userStore.saveUserToken(userToken.value);
   isShowSetTokenModal.value = false;
 };
+
+var clickCount=0
+const handleParagraphClick = async () => {
+  // 点击事件处理函数
+  clickCount++; // 增加计数器的值
+
+  if (clickCount === 3) {
+    // 触发隐藏功能
+    isShowChatServiceSelectModal.value = true;
+    chatStore.checkAllSydneyConfig();
+    clickCount = 0; // 重置计数器
+  }
+}
 </script>
 
 <template>
@@ -166,7 +175,7 @@ const saveUserToken = () => {
       <template #header>
         <div class="text-3xl py-2">慷慨解囊</div>
       </template>
-      <p>如果你觉得这个网站对你有帮助，并且情况允许的话，可以给我一点点支持，总之非常感谢支持～</p>
+      <p @click="handleParagraphClick">如果你觉得这个网站对你有帮助，并且情况允许的话，可以给我一点点支持，总之非常感谢支持～</p>
       <img style="height: 300px;" src="https://cdn.jsdelivr.net/gh/JasonYFY/CDN/images/wechatReceipt.jpg" />
     </NModal>
 </template>

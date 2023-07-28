@@ -21,7 +21,7 @@ const promptStore = usePromptStore();
 const { isShowPromptSotre, isShowChatPrompt, keyword, promptList, searchPromptList, selectedPromptIndex } = storeToRefs(promptStore);
 
 const chatStore = useChatStore();
-const { isShowChatServiceSelectModal, sydneyConfigs, selectedSydneyBaseUrl } = storeToRefs(chatStore);
+const { sydneyConfigs, selectedSydneyBaseUrl } = storeToRefs(chatStore);
 
 const userStore = useUserStore();
 
@@ -65,9 +65,9 @@ const hackDevMode = () => {
 const initChatService = () => {
   if (selectedSydneyBaseUrl.value) {
     CIB.config.sydney.baseUrl = selectedSydneyBaseUrl.value;
-    isShowChatServiceSelectModal.value = false;
+    //isShowChatServiceSelectModal.value = false;
   } else {
-    isShowChatServiceSelectModal.value = true;
+    //isShowChatServiceSelectModal.value = true;
     selectedSydneyBaseUrl.value = CIB.config.sydney.baseUrl;
     const isCus = sydneyConfigs.value.filter((x) => !x.isCus).every((x) => x.baseUrl !== selectedSydneyBaseUrl.value);
     if (isCus) {
