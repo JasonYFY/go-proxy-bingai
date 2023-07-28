@@ -12,14 +12,17 @@ import (
 )
 
 type User struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-	Expiry   string `json:"expiry"`
-	Token    string `json:"token"`
+	Username       string `json:"username"`
+	Password       string `json:"password"`
+	Expiry         string `json:"expiry"`
+	Token          string `json:"token"`
+	KievRPSSecAuth string `json:"kievRPSSecAuth"`
 }
 
 var (
-	users                     []*User
+	users []*User
+	// 创建一个 map，键为数组下标，值为对象指针
+	userMap                   = make(map[int]*User)
 	USER_INFO_ENV_NAME_PREFIX = "Go_Proxy_BingAI_USER_INFO"
 	CRON_STR                  = "0 0 0 * * ?"
 )
@@ -81,9 +84,11 @@ func updateUserTokenList(oldToken string, newToken string) {
 
 func initCookie() {
 	// 打印解码后的数据
-	for _, user := range users {
+	for i, user := range users {
 		updateUserToken(user)
-		log.Printf("[初始化] 用户：%s,获取到的Token: %s,过期时间：%s ", user.Username, user.Token, user.Expiry)
+		log.Printf("[初始化] 用户：%s,获取到的Token: %s,kievRPSSecAuth: %s,过期时间：%s ", user.Username, user.Token, user.KievRPSSecAuth, user.Expiry)
+		//初始化map
+		userMap[i] = user
 		//添加到token池中
 		USER_TOKEN_LIST = append(USER_TOKEN_LIST, user.Token)
 	}
@@ -121,6 +126,7 @@ func updateUserToken(user *User) {
 	// 提取data和expiry字段的值
 	user.Token, _ = responseData["data"].(string)
 	user.Expiry, _ = responseData["expiry"].(string)
+	user.KievRPSSecAuth, _ = responseData["kievRPSSecAuth"].(string)
 
 }
 
@@ -130,7 +136,7 @@ func initUserInfo() {
 	for _, env := range os.Environ() {
 		if strings.HasPrefix(env, USER_INFO_ENV_NAME_PREFIX) {
 			parts := strings.SplitN(env, "=", 2)
-			//解析第一个用户信息
+			//解析用户信息
 			parseUser(parts[1])
 		}
 	}
