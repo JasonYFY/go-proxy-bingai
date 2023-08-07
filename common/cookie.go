@@ -87,7 +87,7 @@ func initCookie() {
 	// 打印解码后的数据
 	for i, user := range users {
 		updateUserToken(user)
-		log.Printf("[初始化] 用户：%s,获取到的Token: %s,kievRPSSecAuth: %s,过期时间：%s ",
+		log.Printf("[初始化] 用户：%s,获取到的Token: %s,kievRPSSecAuth: %s,,RwBf: %s,过期时间：%s ",
 			user.Username,
 			user.Token,
 			user.KievRPSSecAuth,
