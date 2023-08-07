@@ -110,6 +110,11 @@ func NewSingleHostReverseProxy(target *url.URL) *httputil.ReverseProxy {
 					Name:  "KievRPSSecAuth",
 					Value: userMap[randCKIndex].KievRPSSecAuth,
 				})
+				// 添加 RwBf Cookie
+				req.AddCookie(&http.Cookie{
+					Name:  "_RwBf",
+					Value: userMap[randCKIndex].RwBf,
+				})
 			}
 			// ua := req.UserAgent()
 			// if !strings.Contains(ua, "iPhone") || !strings.Contains(ua, "Mobile") {

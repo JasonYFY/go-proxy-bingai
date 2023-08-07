@@ -17,6 +17,7 @@ type User struct {
 	Expiry         string `json:"expiry"`
 	Token          string `json:"token"`
 	KievRPSSecAuth string `json:"kievRPSSecAuth"`
+	RwBf           string `json:"RwBf"`
 }
 
 var (
@@ -86,7 +87,12 @@ func initCookie() {
 	// 打印解码后的数据
 	for i, user := range users {
 		updateUserToken(user)
-		log.Printf("[初始化] 用户：%s,获取到的Token: %s,kievRPSSecAuth: %s,过期时间：%s ", user.Username, user.Token, user.KievRPSSecAuth, user.Expiry)
+		log.Printf("[初始化] 用户：%s,获取到的Token: %s,kievRPSSecAuth: %s,过期时间：%s ",
+			user.Username,
+			user.Token,
+			user.KievRPSSecAuth,
+			user.RwBf,
+			user.Expiry)
 		//初始化map
 		userMap[i] = user
 		//添加到token池中
@@ -127,6 +133,7 @@ func updateUserToken(user *User) {
 	user.Token, _ = responseData["data"].(string)
 	user.Expiry, _ = responseData["expiry"].(string)
 	user.KievRPSSecAuth, _ = responseData["kievRPSSecAuth"].(string)
+	user.RwBf, _ = responseData["RwBf"].(string)
 
 }
 
