@@ -2,9 +2,7 @@ package common
 
 import (
 	"fmt"
-	"math/rand"
 	"net"
-	"time"
 )
 
 // 使用真实有效的美国ip
@@ -58,7 +56,7 @@ var IP_RANGE = [][]string{
 
 // 获取真实有效的随机IP
 func GetRandomIP() string {
-	seed := time.Now().UnixNano()
+	/*seed := time.Now().UnixNano()
 	rng := rand.New(rand.NewSource(seed))
 
 	// 生成随机索引
@@ -75,9 +73,9 @@ func GetRandomIP() string {
 
 	// 生成随机 IP 地址
 	randomIPInt := rng.Uint32()%(endIPInt-startIPInt+1) + startIPInt
-	randomIP := uint32ToIP(randomIPInt)
+	randomIP := uint32ToIP(randomIPInt)*/
 
-	return randomIP
+	return "34.85.156.71"
 }
 
 // 将 IP 地址转换为 uint32
