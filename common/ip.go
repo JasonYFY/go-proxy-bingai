@@ -75,7 +75,7 @@ func GetRandomIP() string {
 	randomIPInt := rng.Uint32()%(endIPInt-startIPInt+1) + startIPInt
 	randomIP := uint32ToIP(randomIPInt)*/
 
-	return "34.85.156.71"
+	return "204.79.197.222"
 }
 
 // 将 IP 地址转换为 uint32
