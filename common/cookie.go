@@ -41,14 +41,12 @@ func cronAndUpdateToken() {
 	c := cron.New()
 	// 每天凌晨0点执行定时任务
 	err := c.AddFunc(CRON_STR, func() {
-		log.Println("[定时任务]开始-检查是否有token过期")
+		log.Println("[定时任务]开始-检查是否有token过期（每天执行）")
 		for _, user := range users {
-			if IsDateLessEqAfterTomorrow(user.Expiry) {
-				var oldToken = user.Token
-				log.Printf("[定时任务] 用户：%s ，准备过期，过期时间：%s ,开始执行更新。。。", user.Username, user.Expiry)
-				updateUserToken(user)
-				updateUserTokenList(oldToken, user.Token)
-			}
+			var oldToken = user.Token
+			log.Printf("[定时任务] 用户：%s ，准备过期，过期时间：%s ,开始执行更新。。。", user.Username, user.Expiry)
+			updateUserToken(user)
+			updateUserTokenList(oldToken, user.Token)
 		}
 
 	})
