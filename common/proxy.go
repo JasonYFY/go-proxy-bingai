@@ -3,13 +3,12 @@ package common
 import (
 	"bytes"
 	"compress/gzip"
-	"context"
+	"crypto/tls"
 	"fmt"
 	"github.com/andybalholm/brotli"
-	xtls "github.com/refraction-networking/utls"
+	utls "github.com/refraction-networking/utls"
 	"io"
 	"log"
-	"net"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -145,6 +144,12 @@ func NewSingleHostReverseProxy(target *url.URL) *httputil.ReverseProxy {
 	}
 	//改写返回信息
 	modifyFunc := func(res *http.Response) error {
+		cookies := res.Cookies()
+		res.Header.Set("Set-Cookie", "")
+		for _, cookie := range cookies {
+			values := strings.Split(cookie.String(), ";")
+			res.Header.Add("Set-Cookie", values[0]+"; "+values[1])
+		}
 		contentType := res.Header.Get("Content-Type")
 		if strings.Contains(contentType, "text/javascript") {
 			contentEncoding := res.Header.Get("Content-Encoding")
@@ -176,7 +181,7 @@ func NewSingleHostReverseProxy(target *url.URL) *httputil.ReverseProxy {
 				Value: resCKRandIndex,
 				Path:  "/",
 			}
-			res.Header.Set("Set-Cookie", ckRandIndex.String())
+			res.Header.Add("Set-Cookie", ckRandIndex.String())
 		}
 
 		// 删除 CSP
@@ -203,7 +208,7 @@ func NewSingleHostReverseProxy(target *url.URL) *httputil.ReverseProxy {
 			Value: randIP,
 			Path:  "/",
 		}
-		res.Header.Set("Set-Cookie", ckRandIP.String())
+		res.Header.Add("Set-Cookie", ckRandIP.String())
 
 		// 跨域
 		// if IS_DEBUG_MODE {
@@ -227,29 +232,16 @@ func NewSingleHostReverseProxy(target *url.URL) *httputil.ReverseProxy {
 	// 	},
 	// }
 
+	// 为 http.DefaultTransport 添加 JA3 浏览器指纹
 	transport := http.DefaultTransport.(*http.Transport).Clone()
-	// 添加JA3指纹
-	transport.DialTLSContext = func(ctx context.Context, network, addr string) (net.Conn, error) {
-		dialer := net.Dialer{}
-		// 创建tcp连接
-		con, err := dialer.DialContext(ctx, network, addr)
-		if err != nil {
-			return nil, err
-		}
-		// 根据地址获取host信息
-		host, _, err := net.SplitHostPort(addr)
-		if err != nil {
-			return nil, err
-		}
-		// 构建tlsconf
-		xtlsConf := &xtls.Config{
-			ServerName:    host,
-			Renegotiation: xtls.RenegotiateNever,
-		}
-		// 构建tls.UConn
-		xtlsConn := xtls.UClient(con, xtlsConf, xtls.HelloEdge_106)
-
-		return xtlsConn, err
+	transport.DisableKeepAlives = false
+	c, _ := utls.UTLSIdToSpec(utls.HelloRandomized)
+	transport.TLSClientConfig = &tls.Config{
+		InsecureSkipVerify: true,
+		MinVersion:         c.TLSVersMin,
+		MaxVersion:         c.TLSVersMax,
+		CipherSuites:       c.CipherSuites,
+		ClientSessionCache: tls.NewLRUClientSessionCache(32),
 	}
 
 	// 代理请求   请求回来的内容   报错自动调用
