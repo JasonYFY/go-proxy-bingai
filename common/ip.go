@@ -2,7 +2,9 @@ package common
 
 import (
 	"fmt"
+	"math/rand"
 	"net"
+	"time"
 )
 
 // 使用真实有效的美国ip
@@ -21,10 +23,6 @@ import (
 //	}
 //
 // copy(await getIpRange());
-
-var IPS = [...]string{"52.23.45.67", "13.66.139.200", "104.27.168.93", "52.37.198.73", "13.107.21.200", "104.16.58.5"}
-var index = 0
-
 var IP_RANGE = [][]string{
 	{"4.150.64.0", "4.150.127.255"},      // Azure Cloud EastUS2 16382
 	{"4.152.0.0", "4.153.255.255"},       // Azure Cloud EastUS2 131070
@@ -60,13 +58,7 @@ var IP_RANGE = [][]string{
 
 // 获取真实有效的随机IP
 func GetRandomIP() string {
-
-	/*randomIP := IPS[index]
-	index = (index + 1) % len(IPS)
-
-	return randomIP*/
-
-	/*seed := time.Now().UnixNano()
+	seed := time.Now().UnixNano()
 	rng := rand.New(rand.NewSource(seed))
 
 	// 生成随机索引
@@ -83,9 +75,9 @@ func GetRandomIP() string {
 
 	// 生成随机 IP 地址
 	randomIPInt := rng.Uint32()%(endIPInt-startIPInt+1) + startIPInt
-	randomIP := uint32ToIP(randomIPInt)*/
+	randomIP := uint32ToIP(randomIPInt)
 
-	return "34.85.156.71"
+	return randomIP
 }
 
 // 将 IP 地址转换为 uint32
