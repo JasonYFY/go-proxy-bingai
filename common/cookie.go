@@ -183,8 +183,8 @@ func IsDateLessEqAfterTomorrow(dateString string) bool {
 	// 获取当前时间
 	now := time.Now()
 
-	// 添加两天（48小时）到当前时间
-	tomorrow := now.Add(48 * time.Hour)
+	// 添加四天（96小时）到当前时间
+	tomorrow := now.Add(96 * time.Hour)
 
 	// 比较传入日期是否小于等于明后天
 	if inputTime.Before(tomorrow) || inputTime.Equal(tomorrow) {
