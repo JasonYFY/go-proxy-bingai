@@ -116,6 +116,11 @@ func NewSingleHostReverseProxy(target *url.URL) *httputil.ReverseProxy {
 					Name:  "_RwBf",
 					Value: userMap[randCKIndex].RwBf,
 				})
+				// 添加 MUID Cookie
+				req.AddCookie(&http.Cookie{
+					Name:  "MUID",
+					Value: userMap[randCKIndex].MUID,
+				})
 			}
 			// ua := req.UserAgent()
 			// if !strings.Contains(ua, "iPhone") || !strings.Contains(ua, "Mobile") {
