@@ -16,6 +16,7 @@ var (
 	// 访问权限密钥，可选
 	AUTH_KEY             string
 	BingAI_TOKEN_URL     string
+	BingAI_PASS_CF_URL   string
 	AUTH_KEY_COOKIE_NAME = "BingAI_Auth_Key"
 )
 
@@ -34,6 +35,7 @@ func initEnv() {
 	if BingAI_TOKEN_URL == "" {
 		BingAI_TOKEN_URL = "http://127.0.0.1:8082/getCookieU"
 	}
+	BingAI_PASS_CF_URL = os.Getenv("Go_Proxy_BingAI_PASS_CF_URL")
 	log.Println("初始化的tokenUrl为：", BingAI_TOKEN_URL)
 	initCookie()
 }

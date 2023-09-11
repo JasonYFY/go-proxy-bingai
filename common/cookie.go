@@ -50,6 +50,9 @@ func cronAndUpdateToken() {
 				updateUserToken(user)
 				updateUserTokenList(oldToken, user.Token)
 			}
+
+			//绕过CF,每天执行吧
+			passCF(user)
 		}
 
 	})
@@ -138,6 +141,37 @@ func updateUserToken(user *User) {
 	user.RwBf, _ = responseData["RwBf"].(string)
 	user.MUID, _ = responseData["MUID"].(string)
 
+}
+
+// 绕过CF
+func passCF(user *User) {
+	jsonData, err := json.Marshal(user)
+	if err != nil {
+		log.Println("JSON编码失败:", err)
+		return
+	}
+
+	resp, err := http.Post(BingAI_PASS_CF_URL, "application/json", bytes.NewBuffer(jsonData))
+	if err != nil {
+		log.Println("请求失败:", err)
+		return
+	}
+	defer resp.Body.Close()
+
+	// 解析响应的JSON数据
+	var responseData map[string]interface{}
+	err = json.NewDecoder(resp.Body).Decode(&responseData)
+	if err != nil {
+		log.Println("解析JSON失败:", err)
+		return
+	}
+
+	if responseData["status"] == "fail" {
+		log.Println("请求绕过CF失败:", responseData["message"])
+		return
+	}
+
+	log.Println("请求绕过CF成功:", responseData["status"])
 }
 
 func initUserInfo() {
