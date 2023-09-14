@@ -295,7 +295,7 @@ _w['_sydConvConfig'] = {
   enableCreatorSendQueryWhenShowConvQuery: true,
   enableCodexWinBotMessage: false,
   enableCodexWin: false,
-  enableThreads: true,
+  enableThreads: false,
   enableThreadsCF: false,
   codexWinEnableCustomGreeting: false,
   codexWinGreetingCustomString: '',
