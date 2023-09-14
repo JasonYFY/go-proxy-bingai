@@ -1090,34 +1090,3 @@ sj_be(
     },
     1
 );
-
-// 设置未登录用户的 codexMUIDUser 为 true
-const User_UCookieValue = CookieGet('_U')
-if (User_UCookieValue == null || User_UCookieValue == undefined || User_UCookieValue == '') {
-  _w['_sydConvConfig']['codexMUIDUser'] = true
-}
-
-const customChatNum = UserStoreGet('customChatNum')
-if (customChatNum != 0) {
-  if (User_UCookieValue == null || User_UCookieValue == undefined || User_UCookieValue == '') {
-    _w['_sydConvConfig']['maxTurnsPerConversationMuidUser'] = customChatNum
-  } else {
-    _w['_sydConvConfig']['maxTurnsPerConversation'] = customChatNum
-  }
-}
-
-
-if (UserStoreGet('enterpriseEnable')) {
-  _w['_sydConvConfig']['disableWelcomeScreen'] = false
-  _w['_sydConvConfig']['enableWelcomeScreenV2'] = false
-  _w['_sydConvConfig']['enableTelemetryPrivacy'] = true
-  _w['_sydConvConfig']['isMSAAuthenticated'] = false
-  _w['_sydConvConfig']['isAccountLinkedWithActiveAAD'] = true
-  _w['_sydConvConfig']['extraBceOptions'] = 'bcechat'
-  _w['_sydConvConfig']['isBingChatForEnterprise'] = true
-  _w['_sydConvConfig']['enableMessagePrivacy'] = true
-  _w['_sydConvConfig']['PLoadIID'] = 'SERP.5833'
-  _w['_sydConvTranslation']['warmWelcomeTitle'] = 'Bing Chat Enterprise'
-  _w['_sydConvTranslation']['welcomeSubtitleText'] = '由 AI 支持的适用于 Web 的 Copilot'
-  _w['_sydConvTranslation']['inputRaiLabel'] = '你的个人和公司数据在此聊天中受到保护'
-}
