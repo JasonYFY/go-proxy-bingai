@@ -64,7 +64,20 @@ func NewSingleHostReverseProxy(target *url.URL) *httputil.ReverseProxy {
 	// var originalDomain string
 	var randIP string
 	var resCKRandIndex string
+
 	director := func(req *http.Request) {
+		var urlTarget = req.URL.Path
+		//判断是否进入了cf
+		targetString := "www.bing.com/turing/captcha/challenge"
+
+		if strings.Contains(urlTarget, targetString) {
+			log.Printf("包含cf字符串: %s，准备过cf", urlTarget)
+			for _, user := range users {
+				//绕过CF,每天执行吧
+				passCF(user)
+			}
+		}
+
 		if req.URL.Scheme == httpsSchemeName || req.Header.Get("X-Forwarded-Proto") == httpsSchemeName {
 			originalScheme = httpsSchemeName
 		}
