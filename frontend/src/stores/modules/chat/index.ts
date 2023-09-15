@@ -66,14 +66,6 @@ export const useChatStore = defineStore(
             reject(new Error(`聊天服务器 ${config.baseUrl} 连接失败`));
           };
           ws.onclose = () => reject(new Error(`聊天服务器 ${config.baseUrl} 连接超时`));
-
-          ws.onmessage = (event) => {
-            // 这里处理从WebSocket接收到的消息
-            const message = event.data;
-            console.log("接收到消息:", message);
-
-            // 如果你需要在此处处理消息，可以将处理逻辑添加到这里
-          };
         });
         return {
           isUsable: true,
