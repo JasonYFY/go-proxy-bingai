@@ -164,6 +164,20 @@ func NewSingleHostReverseProxy(target *url.URL) *httputil.ReverseProxy {
 	modifyFunc := func(res *http.Response) error {
 		log.Println("响应的信息url：", res.Request.URL)
 		log.Println("响应的信息Header:", res.Header)
+		log.Println("响应的信息Upgrade:", res.Header.Get("Upgrade"))
+
+		//判断是否进入了cf
+		targetString := "/sydney/ChatHub"
+		//log.Println("请求的url：", urlTarget)
+		if strings.Contains(res.Request.URL.Path, targetString) {
+			bodyByte, err := io.ReadAll(res.Body)
+			if err != nil {
+				return err
+			}
+			originalBody := string(bodyByte)
+			log.Println("响应的信息:", originalBody)
+		}
+
 		cookies := res.Cookies()
 		res.Header.Set("Set-Cookie", "")
 		for _, cookie := range cookies {
