@@ -157,7 +157,7 @@ func NewSingleHostReverseProxy(target *url.URL) *httputil.ReverseProxy {
 		var Upgrade = res.Header.Get("Upgrade")
 		if Upgrade == "websocket" {
 			log.Println("响应websocket的url：", res.Request.URL)
-			log.Println("响应的状态:", res.Status)
+			log.Println("响应的内容:", res.Body)
 			if res.Status != "101 Switching Protocols" {
 				log.Println("可能进入了cf，准备异步请求过cf")
 				for _, user := range users {

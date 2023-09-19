@@ -103,7 +103,7 @@ _w['_sydConvConfig'] = {
   fromNoResults: false,
   sydTestCacheMsg: '',
   sydTuringSuggestionsMocked: false,
-  traceId: '123456789abcdefghijklmnopgistuvwxyz',
+  traceId: randomLowercaseString(32),
   extraSappOptions: '',
   extraEdgeOptions: 'eredirecturl',
   extraBceOptions: '',
