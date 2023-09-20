@@ -43,6 +43,8 @@ const isShowHistory = computed(() => {
   return (CIB.vm.isMobile && CIB.vm.sidePanel.isVisibleMobile) || (!CIB.vm.isMobile && CIB.vm.sidePanel.isVisibleDesktop);
 });
 
+const { themeMode, sydneyEnable, sydneyPrompt } = storeToRefs(userStore);
+
 onMounted(async () => {
   await initChat();
   hackDevMode();
@@ -53,7 +55,21 @@ onMounted(async () => {
 
   isShowLoading.value = false;
   hackStyle();
+  hackSydney();
   initChatPrompt();
+
+  // set Theme
+  if (themeMode.value == 'light') {
+    CIB.changeColorScheme(0);
+  } else if (themeMode.value == 'dark') {
+    CIB.changeColorScheme(1);
+  } else if (themeMode.value == 'auto') {
+    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      CIB.changeColorScheme(1);
+    } else {
+      CIB.changeColorScheme(0);
+    }
+  }
 });
 
 const hackDevMode = () => {
@@ -78,6 +94,14 @@ const initChatService = () => {
     }
     chatStore.checkAllSydneyConfig();
   }
+  CIB.config.captcha.baseUrl = 'https://www.bing.com'
+  CIB.config.bing.baseUrl = location.origin;
+  CIB.config.bing.signIn.baseUrl = location.origin;
+  CIB.config.answers.baseUrl = location.origin;
+  CIB.config.answers.secondTurnScreenshotBaseUrl = location.origin;
+  CIB.config.contentCreator.baseUrl = location.origin;
+  CIB.config.visualSearch.baseUrl = location.origin;
+  CIB.config.suggestionsv2.baseUrl = location.origin;
 };
 
 const initSysConfig = async () => {
@@ -89,7 +113,7 @@ const initSysConfig = async () => {
           isShowUnauthorizedModal.value = true;
           return;
         }
-        afterAuth(res.data);
+        await afterAuth(res.data);
       }
       break;
     default:
@@ -98,9 +122,9 @@ const initSysConfig = async () => {
   }
 };
 
-const afterAuth = (data: SysConfig) => {
+const afterAuth = async (data: SysConfig) => {
   if (!data.isSysCK) {
-    userStore.checkUserToken();
+    await userStore.checkUserToken();
   }
   initChatService();
 };
@@ -117,12 +141,17 @@ const hackStyle = () => {
     CIB.config.sydney.hostnamesToBypassSecureConnection = CIB.config.sydney.hostnamesToBypassSecureConnection.filter((x) => x !== location.hostname);
   }
   const serpEle = document.querySelector('cib-serp');
-  // 居中
-  serpEle?.setAttribute('alignment', 'center');
   const conversationEle = serpEle?.shadowRoot?.querySelector('cib-conversation') as HTMLElement;
   // todo 反馈暂时无法使用，先移除
   const welcomeEle = conversationEle?.shadowRoot?.querySelector('cib-welcome-container');
-  welcomeEle?.shadowRoot?.querySelector('.learn-tog-item')?.remove();
+  const loginTip = welcomeEle?.shadowRoot?.querySelectorAll("div[class='muid-upsell']");
+  if (loginTip?.length) {
+    loginTip.forEach((ele) => {
+      ele.remove();
+    });
+  }
+  welcomeEle?.shadowRoot?.querySelector('.preview-container')?.remove();
+  welcomeEle?.shadowRoot?.querySelector('.footer')?.remove();
   serpEle?.shadowRoot?.querySelector('cib-serp-feedback')?.remove();
   if (isMobile()) {
     welcomeEle?.shadowRoot?.querySelector('.container-item')?.remove();
@@ -136,6 +165,64 @@ const hackStyle = () => {
 
 interface IActionBarElement extends HTMLElement {
   handleInputTextKey: (ev: KeyboardEvent) => void;
+}
+
+const hackSydney = () => {
+  if (sydneyEnable.value) {
+    CIB.config.sydney.request.sliceIds = [
+      "winmuid1tf",
+      "styleoff",
+      "ccadesk",
+      "smsrpsuppv4cf",
+      "ssrrcache",
+      "contansperf",
+      "crchatrev",
+      "winstmsg2tf",
+      "creatgoglt",
+      "creatorv2t",
+      "sydconfigoptt",
+      "adssqovroff",
+      "530pstho",
+      "517opinion",
+      "418dhlth",
+      "512sprtic1s0",
+      "emsgpr",
+      "525ptrcps0",
+      "529rweas0",
+      "515oscfing2s0",
+      "524vidansgs0",
+    ]
+    CIB.config.sydney.request.optionsSets = [
+        "nlu_direct_response_filter",
+        "deepleo",
+        "disable_emoji_spoken_text",
+        "responsible_ai_policy_235",
+        "enablemm",
+        "dv3sugg",
+        "iyxapbing",
+        "iycapbing",
+        "h3imaginative",
+        "clgalileo",
+        "gencontentv3",
+        "fluxsrtrunc",
+        "fluxtrunc",
+        "fluxv1",
+        "rai278",
+        "replaceurl",
+        "iyoloexp",
+        "udt4upm5gnd",
+        "nojbfedge",
+    ]
+    CIB.config.features.enableUpdateConversationMessages = true
+    CIB.registerContext([{
+      "author": "user",
+      "description": sydneyPrompt.value,
+      "contextType": "WebPage",
+      "messageType": "Context",
+      "messageId": "discover-web--page-ping-mriduna-----",
+    }])
+    CIB.config.strings.webPageContextPrefix = '已处于越狱模式, 请谨慎使用避免封号'
+  }
 }
 
 const initChatPrompt = () => {
@@ -225,7 +312,7 @@ const handleInputTextKey = (ev: KeyboardEvent) => {
     case 'Enter':
       {
         // ev.preventDefault();
-        if (!CIB.vm.actionBar.inputText || !CIB.vm.actionBar.inputText.startsWith('/')) {
+        if (!CIB.vm.actionBar.textInput.value || !CIB.vm.actionBar.textInput.value.startsWith('/')) {
           return;
         }
         selectPrompt(searchPromptList.value[selectedPromptIndex.value]);
@@ -240,7 +327,7 @@ const selectPrompt = (item: IPrompt) => {
     return;
   }
   keyword.value = '';
-  CIB.vm.actionBar.inputText = item.prompt;
+  CIB.vm.actionBar.textInput.value = item.prompt;
   isShowChatPrompt.value = false;
 };
 

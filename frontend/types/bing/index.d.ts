@@ -155,7 +155,9 @@ declare const CIB: {
       /**
        * 输入框文本 赋值即输入问题
        */
-      inputText: string;
+      textInput: {
+        value: string;
+      };
       /**
        * 自动建议的前置文本
        */
@@ -194,7 +196,20 @@ declare const CIB: {
     };
   };
   config: {
+    answers: {
+      baseUrl: string;
+      secondTurnScreenshotBaseUrl: string;
+    };
     bing: {
+      baseUrl: string;
+      signIn: {
+        baseUrl: string;
+      };
+    };
+    captcha: {
+      baseUrl: string;
+    }
+    contentCreator: {
       baseUrl: string;
     };
     edgeAction: {
@@ -210,6 +225,11 @@ declare const CIB: {
        * 获取聊天历史
        */
       enableGetChats: boolean;
+      // 允许从页面获取内容
+      enableUpdateConversationMessages: boolean;
+    };
+    suggestionsv2: {
+      baseUrl: string;
     };
     sydney: {
       baseUrl: string;
@@ -218,6 +238,10 @@ declare const CIB: {
        */
       hostnamesToBypassSecureConnection: string[];
       expiryInMinutes: number;
+      request: {
+        sliceIds: string[];
+        optionsSets: string[];
+      }
     };
     messaging: {
       /**
@@ -229,6 +253,12 @@ declare const CIB: {
        */
       messageBufferWorkerStreamDelayMS: number;
     };
+    visualSearch: {
+      baseUrl: string;
+    }
+    strings: {
+        webPageContextPrefix: string;
+    }
   };
   manager: {
     chat: BingChat;
@@ -271,4 +301,7 @@ declare const CIB: {
   onWorkToggleChanged: PublicSubscribeEvent;
 
   responseTone: ToneType;
+
+  changeColorScheme: (O: 0 | 1) => {};
+  registerContext: (O) => {};
 };
