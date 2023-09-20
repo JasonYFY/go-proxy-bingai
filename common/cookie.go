@@ -52,7 +52,7 @@ func cronAndUpdateToken() {
 			}
 
 			//绕过CF,每天执行吧
-			passCF(user)
+			//passCF(user)
 		}
 
 	})
